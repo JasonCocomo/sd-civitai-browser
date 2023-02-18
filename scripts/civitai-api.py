@@ -262,7 +262,10 @@ def update_model_versions(model_name=None):
 
                 for model in item['modelVersions']:
                     versions_dict[model['name']] = item["name"]
-        return gr.Dropdown.update(choices=[k + ' - ' + v for k, v in versions_dict.items()], value=f'{next(iter(versions_dict.keys()))} - {model_name}')
+        choices = [k + ' - ' + v for k, v in versions_dict.items()]
+        choices.insert(0, '')
+        value = f'{next(iter(versions_dict.keys()))} - {model_name}'
+        return gr.Dropdown.update(choices=choices, value=value)
     else:
         return gr.Dropdown.update(choices=[], value=None)
 
@@ -315,8 +318,9 @@ def update_model_info(model_name=None, model_version=None):
                         output_html = f"<p><b>Model:</b> {model_name}<br><b>Version:</b> {model_version}<br><b>Uploaded by:</b> {model_uploader}<br><br><a href={model_url}><b>Download Here</b></a></p><br><br>{model_desc}<br><div align=center>{img_html}</div>"
 
 
-
-        return gr.HTML.update(value=output_html), gr.Textbox.update(value=output_training), gr.Dropdown.update(choices=[k for k, v in dl_dict.items()], value=next(iter(dl_dict.keys())))
+        model_filenames = [k for k, v in dl_dict.items()]
+        model_filenames.insert(0, '')
+        return gr.HTML.update(value=output_html), gr.Textbox.update(value=output_training), gr.Dropdown.update(choices=model_filenames, value=next(iter(dl_dict.keys())))
     else:
         return gr.HTML.update(value=None), gr.Textbox.update(value=None), gr.Dropdown.update(choices=[], value=None)
 
